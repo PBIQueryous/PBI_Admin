@@ -56,7 +56,7 @@ $namefile = "workspace_reports_meta" + "_" + $timesamp
 $extension = ".json" 
 $filenamestring = $namefolder + $namefile + $extension
 $Result = $filenamestring
-Get-PowerBIReport | ConvertTo-Json | Out-File $Result
+Get-PowerBIReport -Scope Organization | ConvertTo-Json | Out-File $Result
 
 ```
 
