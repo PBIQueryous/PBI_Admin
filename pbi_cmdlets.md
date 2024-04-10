@@ -60,3 +60,15 @@ Get-PowerBIReport -Scope Organization | ConvertTo-Json | Out-File $Result
 
 ```
 
+### get list of datasets
+```powershell
+
+$timesamp = (Get-Date).ToString("yyyy-MM-dd_HHmmss")
+$namefolder = "C:\Users\imran.haq\Documents\PBI_Files\Admin\"
+$namefile = "workspace_reports_meta" + "_" + $timesamp
+$extension = ".json" 
+$filenamestring = $namefolder + $namefile + $extension
+$Result = $filenamestring
+Get-PowerBIDataset -Scope Organization | ConvertTo-Json | Out-File $Result
+
+```
