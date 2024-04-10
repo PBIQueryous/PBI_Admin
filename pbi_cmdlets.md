@@ -32,3 +32,16 @@ Get-PowerBIWorkspace -Scope Organization -All | ConvertTo-Json | Out-File c:\Pow
 
 # Get-PowerBIWorkspace -Scope Organization -All | ConvertTo-Json | Out-File c:\FolderName\FileName.json
 ```
+
+### workspaces outputted to json file with datestamp
+```powershell
+
+$timesamp = (Get-Date).ToString("yyyy-MM-dd_HHmmss")
+$namefolder = "C:\Users\imran.haq\Documents\PBI_Files\Admin\"
+$namefile = "workspace_meta" + "_" + $timesamp
+$extension = ".json" 
+$filenamestring = $namefolder + $namefile + $extension
+$Result = $filenamestring
+Get-PowerBIWorkspace -Scope Organization -All | ConvertTo-Json | Out-File $Result
+
+```
