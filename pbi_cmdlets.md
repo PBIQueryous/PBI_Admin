@@ -31,6 +31,7 @@ Get-PowerBIWorkspace -Scope Organization -All | ConvertTo-Csv | Out-File c:\Powe
 Get-PowerBIWorkspace -Scope Organization -All | ConvertTo-Json | Out-File c:\PowerBIWorkspaces.json
 
 # Get-PowerBIWorkspace -Scope Organization -All | ConvertTo-Json | Out-File c:\FolderName\FileName.json
+# Get-PowerBIWorkspace -Scope Organization -All -Expand "reports" -Filter "isOnDedicatedCapacity eq true
 ```
 
 ### workspaces outputted to json file with datestamp
