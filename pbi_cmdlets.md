@@ -10,6 +10,8 @@ Connect-PowerBIServiceAccount
 
 ```
 
+## Export Current Portal Settings
+### Admin Portal Settings
 ```powershell
 Invoke-PowerBIRestMethod -Url https://api.fabric.microsoft.com/v1/admin/tenantsettings -Method GET | ConvertTo-Json | Out-File .\pbi_admin_portal_settings\admin_portal_snapshot.json 
 
