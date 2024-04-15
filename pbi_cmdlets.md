@@ -10,6 +10,12 @@ Connect-PowerBIServiceAccount
 
 ```
 
+```powershell
+Invoke-PowerBIRestMethod -Url https://api.fabric.microsoft.com/v1/admin/tenantsettings -Method GET | ConvertTo-Json | Out-File .\pbi_admin_portal_settings\admin_portal_snapshot.json 
+
+```
+
+
 ## Get workspace meta
 ### all workspaces
 
@@ -22,6 +28,8 @@ Get-PowerBIWorkspace
 ```powershell
 Get-PowerBIWorkspace -All
 ```
+
+
 
 ### all workspaces (organisation scope)
 
