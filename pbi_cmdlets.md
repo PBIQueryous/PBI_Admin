@@ -9,6 +9,12 @@
 Connect-PowerBIServiceAccount
 
 ```
+## Get PowerBI Access Token
+### PowerBI Access Token
+```powershell
+
+Get-PowerBIAccessToken
+```
 
 ## Export Current Portal Settings
 ### Admin Portal Settings
