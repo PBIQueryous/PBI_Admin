@@ -166,6 +166,64 @@ ForEach($Workspace in $PBIWorkspace)
 }
 ```
 
+### download all pbix from all workspace (BKP prefix) and capture errors
+```powershell
+
+# Log in to Power BI Service
+# Login-PowerBI -Environment Public
+
+# Collect all workspaces
+$PBIWorkspace = Get-PowerBIWorkspace  # Collect all workspaces you have access to
+
+# Collect today's date
+$TodaysDate = Get-Date -Format "yyyyMMdd"
+
+# Build the output path based on today's date
+$OutPutPath = "C:\Users\pbiqu\Documents\_dump\" + $TodaysDate
+
+# Create a path for the error log CSV
+$ErrorLogPath = $OutPutPath + "\ErrorLog.csv"
+if (!(Test-Path $ErrorLogPath)) {
+    New-Item -ItemType File -Path $ErrorLogPath
+    Add-Content -Path $ErrorLogPath -Value "WorkspaceName,ReportName,ErrorMessage"
+}
+
+# Process each workspace
+ForEach ($Workspace in $PBIWorkspace) {
+    $Folder = $OutPutPath + "\" + $Workspace.name
+    If (!(Test-Path $Folder)) {
+        New-Item -ItemType Directory -Force -Path $Folder
+    }
+
+    # Collect all reports from the workspace
+    $PBIReports = Get-PowerBIReport -WorkspaceId $Workspace.Id
+
+    ForEach ($Report in $PBIReports) {
+        Write-Host "Downloading " $Workspace.name ":" $Report.name
+        $OutputFile = $OutPutPath + "\" + $Workspace.name + "\" + $Report.name + ".pbix"
+
+        if (Test-Path $OutputFile) {
+            Remove-Item $OutputFile
+        }
+
+        # Try to export the report and handle any errors
+        Try {
+            Export-PowerBIReport -WorkspaceId $Workspace.ID -Id $Report.ID -OutFile $OutputFile -ErrorAction Stop
+        } Catch {
+            $errorMessage = $_.Exception.Message
+            Write-Host "Error downloading report: " $Report.name " Error: " $errorMessage -ForegroundColor Red
+            # Log the error to the CSV file
+            $logEntry = "`"$($Workspace.name)`",`"$($Report.name)`",`"$errorMessage`""
+            Add-Content -Path $ErrorLogPath -Value $logEntry
+        }
+    }
+}
+
+Write-Host "Operation completed. Check $ErrorLogPath for any errors."
+
+
+```
+
 
 ### download all pbix from single workspace (BKP prefix) and capture errors
 ```powershell
@@ -173,10 +231,14 @@ ForEach($Workspace in $PBIWorkspace)
 # Login to Power BI Service
 # Login-PowerBI -Environment Public
 
-# Collect specific workspaces
+
+# First, Collect all (or one) of the workspaces in a parameter called PBIWorkspace
+	
 $dataset_workspace_name = '___prd_tpg_bi'
 $report_workspace_name = 'Printed.com'
-$PBIWorkspace = Get-PowerBIWorkspace -Name $report_workspace_name
+
+$PBIWorkspace = Get-PowerBIWorkspace 				  # Collect all workspaces you have access to
+$PBIWorkspace = Get-PowerBIWorkspace -Name $report_workspace_name  # Use the -Name parameter to limit to one workspace
 
 # Collect today's date for folder naming
 $TodaysDate = Get-Date -Format "yyyyMMdd"
