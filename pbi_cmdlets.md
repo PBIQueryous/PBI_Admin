@@ -19,7 +19,29 @@ Get-PowerBIAccessToken
 ## Export Current Portal Settings
 ### Admin Portal Settings
 ```powershell
-Invoke-PowerBIRestMethod -Url https://api.fabric.microsoft.com/v1/admin/tenantsettings -Method GET | ConvertTo-Json | Out-File .\pbi_admin_portal_settings\admin_portal_snapshot.json 
+# Define the base URL and the output paths
+$baseUrl = "https://api.fabric.microsoft.com/v1/admin/tenantsettings"
+$outputFolderPath = "C:\Users\imran.haq\OneDrive - The Printed Group Ltd\PowerBI_Content\___Admin___\pbi_tenant_settings_cloud"
+$dateString = Get-Date -Format "yyyyMMdd"
+$jsonFilePath = $outputFolderPath + "\admin_portal_snapshot_" + $dateString + ".json"
+
+# Ensure the output directory exists
+if (!(Test-Path $outputFolderPath)) {
+    New-Item -ItemType Directory -Path $outputFolderPath -Force
+}
+
+# Invoke the Power BI REST API to fetch tenant settings
+$response = Invoke-PowerBIRestMethod -Url $baseUrl -Method GET
+
+# Convert the response to a JSON object
+$jsonData = ConvertFrom-Json $response
+
+# Save the JSON data to a file
+$jsonData | ConvertTo-Json -Depth 100 | Out-File $jsonFilePath
+
+# Output path to the console
+Write-Host "JSON data saved to: $jsonFilePath"
+
 
 ```
 
